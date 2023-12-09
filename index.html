@@ -4,23 +4,66 @@
     <title>Bubble Hunter</title>
     <style>
         .circle {
+            width: 100px;
+            height: 100px;
+            background-color: #87CEEB;
+            /* Light blue color, you can change it */
+            border-radius: 50%;
+            /* Makes the element circular */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            /* Adds a soft shadow */
+            position: relative;
+            overflow: hidden;
+        }
+
+        .circle:before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 50%;
+            background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+            border-radius: 50%;
+            transform: scaleY(2);
+            transform-origin: bottom;
+        }
+
+        /* .circle {
             height: 40px;
             width: 40px;
             background-color: #97f1f1;
             border-radius: 50%;
-            border: 2px solid #4cbdbd;
+            border: 2px solid black;
+        } */
+        .score-board {
+            text-align: right;
+            font-weight: 400;
         }
     </style>
 </head>
 
-<body id="bath_tub">
-
-    <button onclick="makeBubble()">click</button>
+<body>
+    <div id="bath_tub"></div>
+    <div>
+        <p class="score-board" id='score_board'>N/A</p>
+    </div>
 
     <script>
+        let bubbleCount = 0
+        let score = 0
         function generateRandomNumber(range) {
             return Math.floor(Math.random() * range)
         }
+        function bubbleClick(bubbleId) {
+            let clickedBubble = document.getElementById(bubbleId)
+            clickedBubble.remove()
+            score++
+            let scoreBoard = document.getElementById('score_board')
+            scoreBoard.innerHTML = 'Score: ' + score
+        }
+
+        setInterval(function () {
+            makeBubble()
+        }, 800)
 
         function makeBubble() {
             let bathTub = document.getElementById("bath_tub")
@@ -28,7 +71,12 @@
             let width = screen.width
             let top = generateRandomNumber(height)
             let left = generateRandomNumber(width)
-            let bubble = "<div style='position: absolute; top:" + top + "; left:" + left + "' class='circle'></div>"
+            let red = generateRandomNumber(255)
+            let blue = generateRandomNumber(255)
+            let green = generateRandomNumber(255)
+            bubbleCount++
+            let bubbleId = `bubble_${bubbleCount}`
+            let bubble = `<div id="${bubbleId}" style='position: absolute; top:${top}; left:${left}; background-color:rgb(${red}, ${green}, ${blue});' onclick="bubbleClick(this.id)" class='circle'></div>`
             bathTub.innerHTML += bubble
         }
     </script>
